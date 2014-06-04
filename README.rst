@@ -15,6 +15,15 @@ not yet implemented
 * closeTo
 * members
 
+Example
+===========
+
+.. code-block:: python
+
+    from expectpy import expect
+    expect(1).to.be.equal(1)
+    expect("1").to.be.length(1)
+
 License
 ----------
 
