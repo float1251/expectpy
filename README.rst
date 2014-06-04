@@ -3,7 +3,7 @@ expectpy  BDD Assertion Library
 ==========================================
 this is assertion library like chai.expect_
 
-.. _chai.expect:http://chaijs.com/
+.. _chai.expect: http://chaijs.com/
 
 not yet implemented
 ^^^^^^^^^^^^^^^^^^^^
