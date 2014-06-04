@@ -1,7 +1,9 @@
 ==========================================
 expectpy  BDD Assertion Library
 ==========================================
-this is assertion library like `chai.expect<http://chaijs.com/>_`
+this is assertion library like chai.expect_
+
+.. _chai.expect:http://chaijs.com/
 
 not yet implemented
 ^^^^^^^^^^^^^^^^^^^^
