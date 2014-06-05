@@ -14,14 +14,22 @@ class TestAssertionBuilder(unittest.TestCase):
         self.assertEqual(expected.been, expected)
         self.assertEqual(expected.be.been, expected)
         self.assertEqual(expected.to.be, expected)
+        try:
+            expected.to.abcde
+            self.fail()
+        except AttributeError:
+            pass
 
     def test_assertmethod_decorater_is_raise_assertion_error(self):
         class A:
+            def __init__(self, negative=False):
+                self.negative = negative
+
             @assertmethod
             def test(self):
-                self.negative = False
-                self.err = "it is custome message"
-                return False
+                err = "it is custome message"
+                err_not = "it is 'Not' custome message"
+                return self.negative, err, err_not
 
         self.assertRaises(AssertionError, A().test)
         try:
@@ -30,12 +38,28 @@ class TestAssertionBuilder(unittest.TestCase):
         except Exception as e:
             self.assertEqual("it is custome message", str(e))
 
+        try:
+            a = A(True)
+            a.test()
+            self.fail()
+        except Exception as e:
+            self.assertEqual("it is 'Not' custome message", str(e))
+
     def test_equal(self):
         try:
             expect("test").to.be.equal("test")
         except:
             self.fail()
         self.assertRaises(AssertionError, expect("test").to.be.equal, "Test")
+        try:
+            expect("test").to.be.equal("tea", "It is error message Test")
+        except Exception as e:
+            expect(str(e)).to.be.equal("It is error message Test")
+
+        try:
+            expect([]).to_not.be.equal([])
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected [] to not equal []")
 
     def test_a(self):
         class A:
@@ -50,8 +74,27 @@ class TestAssertionBuilder(unittest.TestCase):
 
         self.assertRaises(AssertionError, expect([]).to.be.a, str)
 
-    def test_contain_not(self):
+        try:
+            expect([]).to.be.an(int)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected [] to be an int")
+
+        try:
+            expect([]).to_not.be.an(list)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected [] to not be an list")
+
+        try:
+            expect([]).to.be.an(int, "Custome Message")
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("Custome Message")
+
+    def test_not(self):
         expect("test").to_not.be.a(int)
+        expect("test").to_not.be.not_.a(str)
 
     def test_ok(self):
         class A:
@@ -88,6 +131,18 @@ class TestAssertionBuilder(unittest.TestCase):
         expect(1).to.be.least(1)
         self.assertRaises(AssertionError, expect(0).to.be.least, 1)
 
+        try:
+            expect(1).to.be.above(2)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected 1 to be above 2")
+
+        try:
+            expect(1).to.be.least(2)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected 1 to be least 2")
+
     def test_below_and_most(self):
         expect(5).to.be.below(6)
         expect(5).to.be.most(5)
@@ -102,16 +157,39 @@ class TestAssertionBuilder(unittest.TestCase):
             raise err
         expect(lambda: raise_(ValueError())).to.throw(ValueError)
         expect(lambda: raise_(ValueError())).to_not.throw(AssertionError)
+        try:
+            expect(lambda: raise_(ValueError())).to.throw(AssertionError)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("actual to throw AssertionError")
 
     def test_satisfy(self):
         expect("test").to.satisfy(lambda actual: actual == "test")
         expect("test").to_not.satisfy(lambda actual: actual == "t")
+
+        try:
+            expect("tet").to.satisfy(lambda actual: actual == "test")
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected tet to satisfy <lambda>")
 
     def test_within(self):
         expect(5).to.be.within(3, 6)
         expect(5).to.be.within(5, 6)
         expect(5).to.be.within(3, 5)
         expect(1).to_not.be.within(3, 5)
+
+        try:
+            expect(4).to.be.within(5, 6)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected 4 to be within 5..6")
+
+        try:
+            expect(5).to.not_.be.within(4, 6)
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.be.equal("expected 5 to not be within 4..6")
 
     def test_string(self):
         expect("foobar").to.have.string("bar")
