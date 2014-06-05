@@ -1,5 +1,5 @@
 ==========================================
-expectpy  BDD Assertion Library
+expectpy 
 ==========================================
 this is assertion library like chai.expect_
 
@@ -23,6 +23,7 @@ Example
     from expectpy import expect
     expect(1).to.be.equal(1)
     expect("1").to.be.length(1)
+    expect([1, 2, 3]).to_not.contain(4)
 
 License
 ----------
