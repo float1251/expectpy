@@ -216,8 +216,15 @@ class AssertionBuilder:
         return self._actual[name] == value, err, err_not
 
     @assertmethod
-    def length(self, length, msg=None):
-        return len(self._actual) == length, msg, None
+    def length(self, length, err=None):
+        err_not = err
+        if err is None:
+            err, err_not = _error_message(self._actual,
+                                          "{0} but got {1}".format(length, len(self._actual)),
+                                          "expected {0} to have a length {1}",
+                                          "expected {0} to not have a length {1}"
+                                          )
+        return len(self._actual) == length, err, err_not
 
     @property
     def ok(self):
@@ -230,7 +237,9 @@ class AssertionBuilder:
     def empty(self):
         # if not empty, assert
         if len(self._actual):
-            _assert(False, self.negative)
+            err = "expected {0} to be empty".format(self._actual)
+            err_not = "expected {0} to not be empty".format(self._actual)
+            _assert(False, self.negative, err, err_not)
         return self
 
     @property

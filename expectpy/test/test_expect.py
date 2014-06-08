@@ -243,6 +243,11 @@ class TestAssertionBuilder(unittest.TestCase):
         expect(val).to.have.property_("foo", "bar")
         expect(val).to.have.property_("foo")
 
+        try:
+            expect({}).to.have.property_("foo")
+        except AssertionError as e:
+            expect(str(e)).to.equal("expected {} to have own property foo")
+
     def test_length(self):
         expect([1, 2, 3]).to.have.length(3)
         expect("123").to.have.length(3)
