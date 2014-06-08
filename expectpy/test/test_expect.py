@@ -47,19 +47,19 @@ class TestAssertionBuilder(unittest.TestCase):
 
     def test_equal(self):
         try:
-            expect("test").to.be.equal("test")
+            expect("test").to.equal("test")
         except:
             self.fail()
-        self.assertRaises(AssertionError, expect("test").to.be.equal, "Test")
+        self.assertRaises(AssertionError, expect("test").to.equal, "Test")
         try:
-            expect("test").to.be.equal("tea", "It is error message Test")
+            expect("test").to.equal("tea", "It is error message Test")
         except Exception as e:
-            expect(str(e)).to.be.equal("It is error message Test")
+            expect(str(e)).to.equal("It is error message Test")
 
         try:
             expect([]).to_not.be.equal([])
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected [] to not equal []")
+            expect(str(e)).to.equal("expected [] to not equal []")
 
     def test_a(self):
         class A:
@@ -78,19 +78,19 @@ class TestAssertionBuilder(unittest.TestCase):
             expect([]).to.be.an(int)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected [] to be an int")
+            expect(str(e)).to.equal("expected [] to be an int")
 
         try:
             expect([]).to_not.be.an(list)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected [] to not be an list")
+            expect(str(e)).to.equal("expected [] to not be an list")
 
         try:
             expect([]).to.be.an(int, "Custome Message")
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("Custome Message")
+            expect(str(e)).to.equal("Custome Message")
 
     def test_not(self):
         expect("test").to_not.be.a(int)
@@ -135,13 +135,13 @@ class TestAssertionBuilder(unittest.TestCase):
             expect(1).to.be.above(2)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected 1 to be above 2")
+            expect(str(e)).to.equal("expected 1 to be above 2")
 
         try:
             expect(1).to.be.least(2)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected 1 to be least 2")
+            expect(str(e)).to.equal("expected 1 to be least 2")
 
     def test_below_and_most(self):
         expect(5).to.be.below(6)
@@ -161,7 +161,7 @@ class TestAssertionBuilder(unittest.TestCase):
             expect(lambda: raise_(ValueError())).to.throw(AssertionError)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("actual to throw AssertionError")
+            expect(str(e)).to.equal("actual to throw AssertionError")
 
     def test_satisfy(self):
         expect("test").to.satisfy(lambda actual: actual == "test")
@@ -171,7 +171,7 @@ class TestAssertionBuilder(unittest.TestCase):
             expect("tet").to.satisfy(lambda actual: actual == "test")
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected tet to satisfy <lambda>")
+            expect(str(e)).to.equal("expected tet to satisfy <lambda>")
 
     def test_within(self):
         expect(5).to.be.within(3, 6)
@@ -183,27 +183,45 @@ class TestAssertionBuilder(unittest.TestCase):
             expect(4).to.be.within(5, 6)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected 4 to be within 5..6")
+            expect(str(e)).to.equal("expected 4 to be within 5..6")
 
         try:
             expect(5).to.not_.be.within(4, 6)
             self.fail()
         except AssertionError as e:
-            expect(str(e)).to.be.equal("expected 5 to not be within 4..6")
+            expect(str(e)).to.equal("expected 5 to not be within 4..6")
 
     def test_string(self):
         expect("foobar").to.have.string("bar")
         expect("foobar").to.have.string("foo")
         expect("foobar").to_not.have.string("baz")
 
+        try:
+            expect("foobar").to.string("bbb")
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.equal("expected foobar to contain bbb")
+
     def test_include_and_contain(self):
         expect("foobar").to.include("bar")
         expect("foobar").to.contain("bar")
+
+        try:
+            expect("foobar").to.contain("aaa")
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.eql("expected foobar to contain aaa")
 
     def test_match(self):
         expect("foobar").to.match(r"^foo")
         expect("foobar").to.match(r".*bar$")
         expect("foobar").to_not.match(r"tet")
+
+        try:
+            expect("foobar").to.match(r"/test")
+            self.fail()
+        except AssertionError as e:
+            expect(str(e)).to.eql("expected foobar to match /test")
 
     def test_be_True(self):
         expect(True).to.be_True
@@ -215,9 +233,15 @@ class TestAssertionBuilder(unittest.TestCase):
         val = {"foo": "bar"}
         expect(val).to.have.ownProperty("foo")
 
+        try:
+            expect({}).to.have.ownProperty("foo")
+        except AssertionError as e:
+            expect(str(e)).to.eql("expected {} to have own property foo")
+
     def test_property_(self):
         val = {"foo": "bar"}
         expect(val).to.have.property_("foo", "bar")
+        expect(val).to.have.property_("foo")
 
     def test_length(self):
         expect([1, 2, 3]).to.have.length(3)

@@ -44,23 +44,26 @@ class AssertionBuilder:
         raise AttributeError()
 
     @assertmethod
-    def equal(self,  expected, err=None):
+    def equal(self, expected, err=None):
         err_not = err
         if err is None:
             err, err_not = _error_message(self._actual,
                                           expected,
                                           "expected {0} to equal {1}",
                                           "expected {0} to not equal {1}")
-        return self._actual == expected, err, err_not
+        return self._actual ==  expected, err, err_not
+
+    def eql(self, expected, err=None):
+        return self.equal(expected, err)
 
     @assertmethod
-    def a(self,  expected, err=None):
+    def a(self, expected, err=None):
         err_not = err
         if err is None:
             err, err_not = _error_message(self._actual,
                                           expected.__name__,
-                                          "expected {0} to be an {1}",
-                                          "expected {0} to not be an {1}"
+                                          "expected {0} to be a {1}",
+                                          "expected {0} to not be a {1}"
                                           )
         return isinstance(self._actual, expected), err, None
 
@@ -76,7 +79,7 @@ class AssertionBuilder:
         return isinstance(self._actual, expected), err, err_not
 
     @assertmethod
-    def above(self,  expected, err=None):
+    def above(self, expected, err=None):
         err_not = err
         actual = len(self._actual) if self.is_length else self._actual
         if err is None:
@@ -88,7 +91,7 @@ class AssertionBuilder:
         return actual > expected, err, err_not
 
     @assertmethod
-    def least(self,  expected, err=None):
+    def least(self, expected, err=None):
         err_not = err
         actual = len(self._actual) if self.is_length else self._actual
         if err is None:
@@ -100,7 +103,7 @@ class AssertionBuilder:
         return actual >= expected, err, err_not
 
     @assertmethod
-    def below(self,  expected, err=None):
+    def below(self, expected, err=None):
         err_not = err
         actual = len(self._actual) if self.is_length else self._actual
         if err is None:
@@ -112,7 +115,7 @@ class AssertionBuilder:
         return actual < expected, err, err_not
 
     @assertmethod
-    def most(self,  expected, err=None):
+    def most(self, expected, err=None):
         err_not = err
         actual = len(self._actual) if self.is_length else self._actual
         if err is None:
@@ -162,30 +165,55 @@ class AssertionBuilder:
                                           )
         return start <= actual <= finish, err, err_not
 
-    @assertmethod
-    def string(self, string, msg=None):
-        return string in self._actual, msg, None
+    def string(self, expected, err=None):
+        return self.contain(expected, err)
+
+    def include(self, expected, err=None):
+        return self.contain(expected, err)
 
     @assertmethod
-    def include(self, expected, msg=None):
-        return expected in self._actual, msg, None
+    def contain(self, expected, err=None):
+        err_not = err
+        if err is None:
+            err, err_not = _error_message(self._actual,
+                                          expected,
+                                          "expected {0} to contain {1}",
+                                          "expected {0} to not contain {1}"
+                                          )
+        return expected in self._actual, err, err_not
 
     @assertmethod
-    def contain(self, expected, msg=None):
-        return expected in self._actual, msg, None
-
-    @assertmethod
-    def match(self, pattern, msg=None):
+    def match(self, pattern, err=None):
         import re
-        return True if re.match(pattern, self._actual) else False, msg, None
+        err_not = err
+        if err is None:
+            err, err_not = _error_message(self._actual, pattern,
+                                          "expected {0} to match {1}",
+                                          "expected {0} to not match {1}"
+                                          )
+        return True if re.match(pattern, self._actual) else False, err, err_not
 
     @assertmethod
-    def ownProperty(self, name, msg=None):
-        return name in self._actual, msg, None
+    def ownProperty(self, name, err=None):
+        err_not = err
+        if err is None:
+            err, err_not = _error_message(self._actual, name,
+                                          "expected {0} to have own property {1}",
+                                          "expected {0} to not have own property {1}",
+                                          )
+        return name in self._actual, err, err_not
 
-    @assertmethod
-    def property_(self, name, expectedue, msg=None):
-        return self._actual[name] == expectedue, msg, None
+    def property_(self, name, value=None, err=None):
+        if value is None:
+            return self.ownProperty(name, err)
+        err_not = err
+        if err is None:
+            err, err_not = _error_message(self._actual,
+                                          value,
+                                          "expected {0} to equal {1}",
+                                          "expected {0} to not equal {1}"
+                                          )
+        return self._actual[name] == value, err, err_not
 
     @assertmethod
     def length(self, length, msg=None):
