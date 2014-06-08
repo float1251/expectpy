@@ -10,7 +10,7 @@ setup(
     packages=["expectpy"],
     license="MIT",
     test_suite="expectpy.test",
-    classfilters=[
+    classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License"
     ]
