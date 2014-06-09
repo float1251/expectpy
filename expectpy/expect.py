@@ -244,15 +244,21 @@ class AssertionBuilder:
 
     @property
     def be_None(self):
-        _assert(self._actual is None, self.negative)
+        err = "expected {0} to be None".format(self._actual)
+        err_not = "expected {0} to not be None".format(self._actual)
+        _assert(self._actual is None, self.negative, err, err_not)
         return self
 
     @property
     def be_True(self):
-        _assert(self._actual is True, self.negative)
+        err = "expected {0} to be True".format(self._actual)
+        err_not = "expected {0} to not be True".format(self._actual)
+        _assert(self._actual is True, self.negative, err, err_not)
         return self
 
     @property
     def be_False(self):
-        _assert(self._actual is False, self.negative)
+        err = "expected {0} to be False".format(self._actual)
+        err_not = "expected {0} to not be False".format(self._actual)
+        _assert(self._actual is False, self.negative, err, err_not)
         return self
