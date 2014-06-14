@@ -1,12 +1,14 @@
 import unittest
 from expectpy import expect
 from expectpy.expect import assertmethod
+from expectpy import __VERSION__
 
 
 class TestAssertionBuilder(unittest.TestCase):
 
     def test_import(self):
         self.assertIsNotNone(expect)
+        self.assertIsNotNone(__VERSION__)
 
     def test_expect_has_language_chains_attribute(self):
         expected = expect("test")
