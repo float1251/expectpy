@@ -10,6 +10,7 @@ def assertmethod(func):
     def wrapper(self, *args, **kwargs):
         res, msg, not_msg = func(self, *args, **kwargs)
         _assert(res, self.negative, msg, not_msg)
+        return self
     return wrapper
 
 
