@@ -256,3 +256,6 @@ class TestAssertionBuilder(unittest.TestCase):
 
         expect("foo").to.have.length_.above(2)
         expect("foo").to.have.length_.within(2, 5)
+
+    def test_method_chane(self):
+        expect([1, 2, 3]).to_not.have.length(2).and_.length_.below(2)
