@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="expectpy",
-    version="0.0.3",
+    version="0.0.4",
     author="takahiro iwatani",
     author_email="taka.05022002@gmail.com",
     description="assertion library like chai.expect.",
