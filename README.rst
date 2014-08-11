@@ -1,16 +1,20 @@
-################
 expectpy 
-################
+=========
 .. image:: https://travis-ci.org/float1251/expectpy.svg?branch=master
     :target: https://travis-ci.org/float1251/expectpy
+
+
+.. image:: http://img.shields.io/pypi/v/expects.svg
+    :target: https://pypi.python.org/pypi/expectpy
+    :alt: Latest version
     
 this is assertion library like chai.expect_
 
 .. _chai.expect: http://chaijs.com/
 
-***********************
+
 not yet implemented
-***********************
+---------------------
 * deep
 * keys
 * instanceof
@@ -19,10 +23,8 @@ not yet implemented
 * closeTo
 * members
 
-************
 Example
-************
-
+---------------
 .. code-block:: python
 
     from expectpy import expect
@@ -30,10 +32,8 @@ Example
     expect("1").to.be.length(1)
     expect([1, 2, 3]).to_not.contain(4)
 
-**********
 License
-**********
-
+-----------
 (The MIT License)
 
 Copyright (c) 2014 takahiro iwatani taka.05022002@gmail.com
