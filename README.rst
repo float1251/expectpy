@@ -4,7 +4,7 @@ expectpy
     :target: https://travis-ci.org/float1251/expectpy
 
 
-.. image:: http://img.shields.io/pypi/v/expects.svg
+.. image:: http://img.shields.io/pypi/v/expectpy.svg
     :target: https://pypi.python.org/pypi/expectpy
     :alt: Latest version
     
